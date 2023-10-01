@@ -1,20 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Bienvenue sur Sotum!{% endblock %}
 
 {% block body %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .home-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .home-wrapper a { color: #007bff; text-decoration: none; }
+    .home-wrapper a:hover { text-decoration: underline; }
 </style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
+<div class="home-wrapper">
+    <h1>Bienvenue sur le jeu Sotum! 🎮</h1>
+    
+    <p>Découvrez les mondes mystérieux et les quêtes passionnantes de Sotum. Choisissez votre chemin et commencez votre aventure!</p>
+    
+    <h2>Routes disponibles :</h2>
     <ul>
-        <li>Your controller at <code><a href="{{ '/var/www/src/Controller/HomeController.php'|file_link(0) }}">src/Controller/HomeController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/var/www/templates/home/index.html.twig'|file_link(0) }}">templates/home/index.html.twig</a></code></li>
+        <li><a href="/register">cree mon compte</a></li>
+        <li><a href="/login">connexion</a></li>
+     
     </ul>
 </div>
 {% endblock %}
