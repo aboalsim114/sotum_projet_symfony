@@ -29,6 +29,15 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            $userEmail = $user->getEmail();
+            if (str_ends_with($userEmail, '@sotum.com')) {
+                $user->setRoles(['ROLE_ADMIN']);
+            } else {
+                $user->setRoles(['ROLE_USER']);
+            }
+
+
+            $user->setCreatedAt(new \DateTimeImmutable());
             $entityManager->persist($user);
             $entityManager->flush();
 
