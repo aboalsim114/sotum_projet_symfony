@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -37,9 +39,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $username = null;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Classements::class)]
+    private Collection $classements;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Feedbacks::class)]
+    private Collection $feedbacks;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Parties::class)]
+    private Collection $parties;
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
+        $this->classements = new ArrayCollection();
+        $this->feedbacks = new ArrayCollection();
+        $this->parties = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -132,6 +146,96 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUsername(string $username): static
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Classements>
+     */
+    public function getClassements(): Collection
+    {
+        return $this->classements;
+    }
+
+    public function addClassement(Classements $classement): static
+    {
+        if (!$this->classements->contains($classement)) {
+            $this->classements->add($classement);
+            $classement->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClassement(Classements $classement): static
+    {
+        if ($this->classements->removeElement($classement)) {
+            // set the owning side to null (unless already changed)
+            if ($classement->getUser() === $this) {
+                $classement->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Feedbacks>
+     */
+    public function getFeedbacks(): Collection
+    {
+        return $this->feedbacks;
+    }
+
+    public function addFeedback(Feedbacks $feedback): static
+    {
+        if (!$this->feedbacks->contains($feedback)) {
+            $this->feedbacks->add($feedback);
+            $feedback->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedback(Feedbacks $feedback): static
+    {
+        if ($this->feedbacks->removeElement($feedback)) {
+            // set the owning side to null (unless already changed)
+            if ($feedback->getUser() === $this) {
+                $feedback->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Parties>
+     */
+    public function getParties(): Collection
+    {
+        return $this->parties;
+    }
+
+    public function addParty(Parties $party): static
+    {
+        if (!$this->parties->contains($party)) {
+            $this->parties->add($party);
+            $party->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParty(Parties $party): static
+    {
+        if ($this->parties->removeElement($party)) {
+            // set the owning side to null (unless already changed)
+            if ($party->getUser() === $this) {
+                $party->setUser(null);
+            }
+        }
 
         return $this;
     }

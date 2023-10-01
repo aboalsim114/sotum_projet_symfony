@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\QuestionsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: QuestionsRepository::class)]
@@ -23,6 +25,14 @@ class Questions
 
     #[ORM\Column(length: 255)]
     private ?string $categorie = null;
+
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: ReponsesUtilisateurs::class)]
+    private Collection $reponsesUtilisateurs;
+
+    public function __construct()
+    {
+        $this->reponsesUtilisateurs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -61,6 +71,36 @@ class Questions
     public function setCategorie(string $categorie): static
     {
         $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ReponsesUtilisateurs>
+     */
+    public function getReponsesUtilisateurs(): Collection
+    {
+        return $this->reponsesUtilisateurs;
+    }
+
+    public function addReponsesUtilisateur(ReponsesUtilisateurs $reponsesUtilisateur): static
+    {
+        if (!$this->reponsesUtilisateurs->contains($reponsesUtilisateur)) {
+            $this->reponsesUtilisateurs->add($reponsesUtilisateur);
+            $reponsesUtilisateur->setQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReponsesUtilisateur(ReponsesUtilisateurs $reponsesUtilisateur): static
+    {
+        if ($this->reponsesUtilisateurs->removeElement($reponsesUtilisateur)) {
+            // set the owning side to null (unless already changed)
+            if ($reponsesUtilisateur->getQuestion() === $this) {
+                $reponsesUtilisateur->setQuestion(null);
+            }
+        }
 
         return $this;
     }
