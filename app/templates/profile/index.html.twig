@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+<section class="testimonial py-5" id="profile">
+    <div class="container">
+        <div class="row ">
+            <div class="col-md-4 py-5 bg-primary text-white text-center ">
+                <div class="card-body">
+                    <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Maxwell Admin" style="width:30%">
+                    <h2 class="py-3">{{ app.user.username }}</h2>
+                    <p>{{ app.user.email }}</p>
+                </div>
+            </div>
+            <div class="col-md-8 py-5 border">
+                <h4 class="pb-4">Détails personnels</h4>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="username">Nom d'utilisateur</label>
+                        <input type="text" class="form-control" id="username" value="{{ app.user.username }}" readonly>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" value="{{ app.user.email }}" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="role">Rôle</label>
+                        <input type="text" class="form-control" disabled id="role" value="{{ app.user.roles[0] }}" readonly>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="created_at">Date de création</label>
+                        <input type="text" class="form-control" id="created_at" value="{{ app.user.createdAt|date('d/m/Y') }}" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="text-right">
+                        <button type="button" id="submit" name="submit" class="btn btn-primary">Mettre à jour</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
