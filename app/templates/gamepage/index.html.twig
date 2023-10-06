@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello GamepageController!
+{% endblock %}
+
+{% block body %}
+	<style>
+
+		body {
+			background-color: #2b2b2b;
+			color: #fff;
+		}
+
+		.container header {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-evenly;
+			border-bottom: 2px solid #fff;
+			align-items: center;
+			margin-top: 10px;
+		}
+
+		.container a {
+			all: unset;
+			cursor: pointer;
+			font-size: 25px;
+		}
+
+		.GameContainer {
+			width: 100%;
+			height: auto;
+			margin-top: 20px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			padding: 8px;
+		}
+
+		.grid {
+			display: grid;
+			grid-template-columns: repeat({{ columns }}, 50px);
+
+			gap: 1px;
+		}
+		.blue-square {
+			width: 50px;
+			height: 50px;
+			background-color: #0077c7;
+			text-align: center;
+			line-height: 50px;
+			font-size: 24px;
+			color: white;
+			cursor: pointer;
+		}
+
+		.blue-square:hover {
+			background-color: #0055a7;
+			transform: scale(1.05);
+			transition: all 0.3s ease;
+		}
+	</style>
+
+	<div class="container">
+		<header>
+
+			<a href="">
+				<i class="fa-regular fa-circle-question"></i>
+			</a>
+			<a href="">
+				<i class="fa-solid fa-ranking-star"></i>
+			</a>
+			<h1>Sotum</h1>
+
+			<a href="">
+				<i class="fa-solid fa-gear"></i>
+			</a>
+
+		</header>
+
+		<main>
+			<div class="container">
+				<div class="GameContainer">
+					<div class="grid">
+
+						{% for row in 1..rows %}
+							{% for column in 1..columns %}
+								<div class="blue-square" contenteditable="true"></div>
+							{% endfor %}
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+
+		</main>
+
+	</div>
+{% endblock %}
