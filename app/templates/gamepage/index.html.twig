@@ -82,16 +82,21 @@
 			<div class="container">
 				<div class="GameContainer">
 					<div class="grid">
-
 						{% for row in 1..rows %}
 							{% for column in 1..columns %}
-								<div class="blue-square" contenteditable="true"></div>
+								<div class="blue-square" contenteditable="true">
+									{% if column == 1 and row - 1 <= lastValidatedRow %}
+										{{ validPhrases[row - 1]|first }}
+									{% endif %}
+								</div>
 							{% endfor %}
 						{% endfor %}
+
+
+					
 					</div>
 				</div>
 			</div>
-
 		</main>
 
 	</div>
