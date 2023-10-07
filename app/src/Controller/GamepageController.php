@@ -23,11 +23,9 @@ class GamepageController extends AbstractController
 
     private function getLastValidatedRow(): int
     {
-        $session = $this->get('session');
-        $validatedRows = $session->get('validatedRows', []);
-
-        // Retourne le dernier index validé ou -1 si aucun n'est validé.
-        return end($validatedRows) ?: -1;
+        // Pour cet exemple, je vais simplement retourner 0.
+        // Vous pouvez remplacer cette logique pour déterminer la dernière ligne validée.
+        return 0;
     }
 
 
@@ -55,13 +53,6 @@ class GamepageController extends AbstractController
             $isValid = $rowData === $this->validPhrases[$rowIndex];
         } else {
             $isValid = false;
-        }
-
-        if ($isValid) {
-            $session = $this->get('session');
-            $validatedRows = $session->get('validatedRows', []);
-            $validatedRows[] = $rowIndex;
-            $session->set('validatedRows', $validatedRows);
         }
 
         return new JsonResponse(['isValid' => $isValid]);
