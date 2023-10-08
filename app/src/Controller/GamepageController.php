@@ -21,6 +21,25 @@ class GamepageController extends AbstractController
 
     ];
 
+    #[Route('/gamepage', name: 'app_gamepage')]
+    public function index(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        // Mélanger l'ordre des phrases valides
+        shuffle($this->validPhrases);
+
+        return $this->render('gamepage/index.html.twig', [
+            'controller_name' => 'GamepageController',
+            'rows' => 6,
+            'columns' => 8,
+            'validPhrases' => $this->validPhrases,
+            'lastValidatedRow' => $this->getLastValidatedRow()
+        ]);
+    }
+
+
+
     private function getLastValidatedRow(): int
     {
         // Pour cet exemple, je vais simplement retourner 0.
@@ -29,19 +48,19 @@ class GamepageController extends AbstractController
     }
 
 
-    #[Route('/gamepage', name: 'app_gamepage')]
-    public function index(): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-        return $this->render('gamepage/index.html.twig', [
-            'controller_name' => 'GamepageController',
-            'rows' => 6,
-            'columns' => 8,
-            'validPhrases' => $this->validPhrases,
-            'lastValidatedRow' => $this->getLastValidatedRow()
+    // #[Route('/gamepage', name: 'app_gamepage')]
+    // public function index(): Response
+    // {
+    //     $this->denyAccessUnlessGranted('ROLE_USER');
+    //     return $this->render('gamepage/index.html.twig', [
+    //         'controller_name' => 'GamepageController',
+    //         'rows' => 6,
+    //         'columns' => 8,
+    //         'validPhrases' => $this->validPhrases,
+    //         'lastValidatedRow' => $this->getLastValidatedRow()
 
-        ]);
-    }
+    //     ]);
+    // }
 
     #[Route('/validate-row', name: 'validate_row', methods: ["POST"])]
     public function validateRow(Request $request): Response
