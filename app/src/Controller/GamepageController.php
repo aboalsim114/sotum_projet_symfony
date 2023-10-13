@@ -18,15 +18,22 @@ class GamepageController extends AbstractController
         "tendance",
         "Chocolat",
         "tendance",
-
+        "soleil08",
+        "bonjour8",
+        "octobre8",
+        "hiver008",
+        "étécool8",
+        "printem",
+        "automn08",
+        "animaux8",
     ];
+    
 
     #[Route('/gamepage', name: 'app_gamepage')]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        // Mélanger l'ordre des phrases valides
         shuffle($this->validPhrases);
 
         return $this->render('gamepage/index.html.twig', [
@@ -38,29 +45,10 @@ class GamepageController extends AbstractController
         ]);
     }
 
-
-
     private function getLastValidatedRow(): int
     {
-        // Pour cet exemple, je vais simplement retourner 0.
-        // Vous pouvez remplacer cette logique pour déterminer la dernière ligne validée.
         return 0;
     }
-
-
-    // #[Route('/gamepage', name: 'app_gamepage')]
-    // public function index(): Response
-    // {
-    //     $this->denyAccessUnlessGranted('ROLE_USER');
-    //     return $this->render('gamepage/index.html.twig', [
-    //         'controller_name' => 'GamepageController',
-    //         'rows' => 6,
-    //         'columns' => 8,
-    //         'validPhrases' => $this->validPhrases,
-    //         'lastValidatedRow' => $this->getLastValidatedRow()
-
-    //     ]);
-    // }
 
     #[Route('/validate-row', name: 'validate_row', methods: ["POST"])]
     public function validateRow(Request $request): Response
