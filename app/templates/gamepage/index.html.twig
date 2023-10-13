@@ -144,22 +144,29 @@
         <div class="container">
             <div class="GameContainer">
                 <div class="grid">
-                    {% for row in 1..rows %}
-                        {% for column in 1..columns %}
-                            <div class="blue-square" contenteditable="true" data-row="{{ row }}" data-correct-letter="{{ validPhrases[row - 1]|first }}">
-                                {% if column == 1 and row - 1 <= lastValidatedRow %}
-                                    {{ validPhrases[row - 1]|first }}
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-                    {% endfor %}
+    {% for row in 1..rows %}
+        {% for column in 1..columns %}
+            {% if row - 1 < validPhrases|length %}
+                <div class="blue-square" contenteditable="true" data-row="{{ row }}" data-correct-letter="{{ validPhrases[row - 1]|first }}">
+                    {% if column == 1 and row - 1 <= lastValidatedRow %}
+                        {{ validPhrases[row - 1]|first }}
+                    {% endif %}
                 </div>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+</div>
 
                 <button id="validateWordButton">Valider</button>
                 <p id="attemptsDisplay">Essais restants: 6</p>
-                <div class="selected-word">
-                    Mot sélectionné aléatoirement : {{ validPhrases[0] }}
-                </div>
+              <div class="selected-word">
+    {% if validPhrases[0] is defined %}
+        Mot sélectionné aléatoirement : {{ validPhrases[0] }}
+    {% else %}
+        Mot non disponible.
+    {% endif %}
+</div>
+
             </div>
         </div>
     </main>
