@@ -21,28 +21,38 @@ class MotsRepository extends ServiceEntityRepository
         parent::__construct($registry, Mots::class);
     }
 
-//    /**
-//     * @return Mots[] Returns an array of Mots objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * Generate a random word of a given length.
+     *
+     * @param int $length The length of the word to generate.
+     * @return string The generated word.
+     */
+    public function generateRandomWord(int $length = 8): string
+    {
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $word = '';
+        for ($i = 0; $i < $length; $i++) {
+            $word .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        return $word;
+    }
 
-//    public function findOneBySomeField($value): ?Mots
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * Create and persist a random word to the database.
+     *
+     * @param int $length The length of the word to generate.
+     * @return Mots The persisted word entity.
+     */
+    public function createAndPersistRandomWord(int $length = 8): Mots
+    {
+        $wordValue = $this->generateRandomWord($length);
+
+        $word = new Mots();
+        $word->setValue($wordValue); // Assuming you have a setValue method in Mots entity
+
+        $this->_em->persist($word);
+        $this->_em->flush();
+
+        return $word;
+    }
 }
