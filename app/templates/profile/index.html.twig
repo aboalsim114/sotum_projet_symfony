@@ -9,9 +9,9 @@
             <div class="col-md-4 py-5 bg-primary text-white text-center">
                 <div class="card-body">
                     {% if app.user.profilePicture %}
-                        <img src="{{ asset('profile_pictures/' ~ app.user.profilePicture) }}" alt="{{ app.user.username }}" style="width:30%">
+                        <img src="{{ asset('profile_pictures/' ~ app.user.profilePicture) }}" alt="{{ app.user.username }}" style="width:33%">
                     {% else %}
-                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="{{ app.user.username }}" style="width:30%">
+                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="{{ app.user.username }}" style="width:33%">
                     {% endif %}
                     <h2 class="py-3">{{ app.user.username }}</h2>
                     <p>{{ app.user.email }}</p>
@@ -19,7 +19,7 @@
             </div>
             <div class="col-md-8 py-5 border">
                 <h4 class="pb-4">Détails personnels</h4>
-                <form action="{{ path('profile_update') }}" method="post">
+                <form action="{{ path('profile_update') }}" method="post" enctype="multipart/form-data">
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="username">Nom d'utilisateur</label>
@@ -50,6 +50,13 @@
                             <label for="confirm_password">Confirmez le mot de passe</label>
                             <input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="Confirmer le nouveau mot de passe">
                         </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="profilePicture">Image de profil</label>
+                            <input type="file" class="form-control-file" name="profilePicture" id="profilePicture">
+                        </div>
+                  
                     </div>
                     <div class="form-row">
                         <div class="text-right">
