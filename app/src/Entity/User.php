@@ -48,6 +48,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Parties::class)]
     private Collection $parties;
 
+    #[ORM\Column(length: 255)]
+    private ?string $profilePicture = null;
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
@@ -236,6 +239,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $party->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getProfilePicture(): ?string
+    {
+        return $this->profilePicture;
+    }
+
+    public function setProfilePicture(string $profilePicture): static
+    {
+        $this->profilePicture = $profilePicture;
 
         return $this;
     }

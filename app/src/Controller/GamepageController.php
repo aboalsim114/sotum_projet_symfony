@@ -12,22 +12,7 @@ use App\Repository\MotsRepository;
 
 class GamepageController extends AbstractController
 {
-    private $validPhrases = [
-        "plongeon",
-        "travaux",
-        "Chocolat",
-        "tendance",
-        "Chocolat",
-        "tendance",
-        "soleil08",
-        "bonjour8",
-        "octobre8",
-        "hiver008",
-        "étécool8",
-        "printem",
-        "automn08",
-        "animaux8",
-    ];
+    
     
 
     #[Route('/gamepage', name: 'app_gamepage')]

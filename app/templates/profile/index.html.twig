@@ -5,10 +5,14 @@
 {% block body %}
 <section class="testimonial py-5" id="profile">
     <div class="container">
-        <div class="row ">
-            <div class="col-md-4 py-5 bg-primary text-white text-center ">
+        <div class="row">
+            <div class="col-md-4 py-5 bg-primary text-white text-center">
                 <div class="card-body">
-                    <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Maxwell Admin" style="width:30%">
+                    {% if app.user.profilePicture %}
+                        <img src="{{ asset('profile_pictures/' ~ app.user.profilePicture) }}" alt="{{ app.user.username }}" style="width:30%">
+                    {% else %}
+                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="{{ app.user.username }}" style="width:30%">
+                    {% endif %}
                     <h2 class="py-3">{{ app.user.username }}</h2>
                     <p>{{ app.user.email }}</p>
                 </div>
