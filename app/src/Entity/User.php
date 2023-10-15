@@ -48,7 +48,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Parties::class)]
     private Collection $parties;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $profilePicture = null;
 
     public function __construct()
@@ -248,10 +248,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->profilePicture;
     }
 
-    public function setProfilePicture(string $profilePicture): static
-    {
-        $this->profilePicture = $profilePicture;
+    public function setProfilePicture(?string $profilePicture): static
+{
+    $this->profilePicture = $profilePicture;
 
-        return $this;
-    }
+    return $this;
+}
+
 }
