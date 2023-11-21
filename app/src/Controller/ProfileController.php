@@ -50,24 +50,29 @@ class ProfileController extends AbstractController
         }
 
         if ($profilePictureFile instanceof UploadedFile) {
+            if (!$profilePictureFile->isValid()) {
+                $this->addFlash('error', 'Le fichier téléchargé n\'est pas valide.');
+                return $this->redirectToRoute('app_profile');
+            }
+
             $originalFilename = pathinfo($profilePictureFile->getClientOriginalName(), PATHINFO_FILENAME);
             $safeFilename = $slugger->slug($originalFilename);
             $newFilename = $safeFilename.'-'.uniqid().'.'.$profilePictureFile->guessExtension();
 
+            $destination = $this->getParameter('kernel.project_dir').'/public/profile_pictures';
+
             try {
-                $profilePictureFile->move(
-                    $this->getParameter('kernel.project_dir').'/public/profile_pictures',
-                    $newFilename
-                );
+                $profilePictureFile->move($destination, $newFilename);
             } catch (FileException $e) {
                 // Gérer l'erreur d'upload ici
-                $this->addFlash('error', 'Une erreur s\'est produite lors de l\'upload de l\'image.');
+                $this->addFlash('error', 'Une erreur s\'est produite lors de l\'upload de l\'image: '.$e->getMessage());
                 return $this->redirectToRoute('app_profile');
             }
 
             // Mettez à jour le nom de fichier de l'image de profil
             $user->setProfilePicture($newFilename);
         }
+
 
         // Enregistrez les modifications
         $entityManager->persist($user);

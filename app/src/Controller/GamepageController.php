@@ -13,7 +13,6 @@ use App\Repository\MotsRepository;
 class GamepageController extends AbstractController
 {
     
-    
 
     #[Route('/gamepage', name: 'app_gamepage')]
     public function index(MotsRepository $motsRepository ): Response
@@ -27,7 +26,16 @@ class GamepageController extends AbstractController
         }, $motsFromDb);
 
         shuffle($this->validPhrases);
-
+        
+        // // Récupérez les scores
+        // $scores = $scoreRepository->findBy([], ['score' => 'DESC'], 10);
+        // $formattedScores = array_map(function($score) {
+        //     return [
+        //         'playerName' => $score->getPlayer()->getName(),
+        //         'score' => $score->getScore()
+        //     ];
+        // }, $scores);
+        
         return $this->render('gamepage/index.html.twig', [
             'controller_name' => 'GamepageController',
             'rows' => 6,
@@ -36,6 +44,24 @@ class GamepageController extends AbstractController
             'lastValidatedRow' => $this->getLastValidatedRow()
         ]);
     }
+
+    
+
+    // #[Route('/player-scores', name: 'player_scores')]
+    // public function playerScores(): JsonResponse
+    // {
+    //     $joueurs = $this->getDoctrine()->getRepository(Joueur::class)->findAll();
+    //     $scores = [];
+
+    //     foreach ($joueurs as $joueur) {
+    //         $scores[] = [
+    //             'nom' => $joueur->getNom(),
+    //             'score' => $joueur->getScore(),
+    //         ];
+    //     }
+
+    //     return new JsonResponse($scores);
+    // }
 
     private function getLastValidatedRow(): int
     {

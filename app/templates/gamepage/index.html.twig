@@ -88,8 +88,8 @@
 		<header>
 
 			<a href="#" id="rules-button" data-bs-toggle="modal" data-bs-target="#rulesModal">
-		<i class="fa-regular fa-circle-question"></i>
-	</a>
+		        <i class="fa-regular fa-circle-question"></i>
+	        </a>
 
 	<!-- Modal -->
 	<div class="modal fade" id="rulesModal" tabindex="-1" aria-labelledby="rulesModalLabel" aria-hidden="true">
@@ -129,9 +129,43 @@
 	</div>
 
 
-			<a href="">
-				<i class="fa-solid fa-ranking-star"></i>
-			</a>
+			
+            <a href="javascript:void(0);" id="show-scores">
+                <i class="fa-solid fa-ranking-star"></i>
+            </a>
+            <div class="modal fade" id="scoresModal" tabindex="-1" aria-labelledby="scoresModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="background-color: #fff; color: #000;">
+            <div class="modal-header" style="background-color: #800000;">
+                <h5 class="modal-title" id="scoresModalLabel" style="color: #fff;">Scores</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: #fff;"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table" style="color: #000; text-align: center; border: 1px solid #000;">
+                        <thead>
+                            <tr>
+                                <th>Nom du Joueur</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for score in scores %}
+                                <tr>
+                                    <td>{{ score.playerName }}</td>
+                                    <td>{{ score.score }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 			<h1>Sotum</h1>
 
 			<a href="">
@@ -144,18 +178,18 @@
         <div class="container">
             <div class="GameContainer">
                 <div class="grid">
-    {% for row in 1..rows %}
-        {% for column in 1..columns %}
-            {% if row - 1 < validPhrases|length %}
-                <div class="blue-square" contenteditable="true" data-row="{{ row }}" data-correct-letter="{{ validPhrases[row - 1]|first }}">
-                    {% if column == 1 and row - 1 <= lastValidatedRow %}
-                        {{ validPhrases[row - 1]|first }}
-                    {% endif %}
-                </div>
-            {% endif %}
-        {% endfor %}
-    {% endfor %}
-</div>
+                {% for row in 1..rows %}
+                    {% for column in 1..columns %}
+                        {% if row - 1 < validPhrases|length %}
+                            <div class="blue-square" contenteditable="true" data-row="{{ row }}" data-correct-letter="{{ validPhrases[row - 1]|first }}">
+                                {% if column == 1 and row - 1 <= lastValidatedRow %}
+                                    {{ validPhrases[row - 1]|first }}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
 
                 <button id="validateWordButton">Valider</button>
                 <p id="attemptsDisplay">Essais restants: 6</p>
@@ -173,12 +207,12 @@
     </main>
     </div>
 
-   <script>
+    <script>
 window.addEventListener("DOMContentLoaded", function () {
     const inputCells = document.querySelectorAll('.blue-square');
     let remainingAttempts = 6;
     const attemptsDisplay = document.getElementById('attemptsDisplay');
-    var validPhrases = {{ validPhrases|json_encode|raw }};
+    var validPhrases = {{ validPhrases|json_encode|raw }}; // Assurez-vous que validPhrases est correctement défini dans votre contexte Twig
 
     function getCurrentRow() {
         for (let cell of inputCells) {
@@ -189,6 +223,19 @@ window.addEventListener("DOMContentLoaded", function () {
         return 1;
     }
 
+    // Suppression de l'écouteur d'événement redondant 'DOMContentLoaded'
+    fetch('/fetch-scores')
+        .then(response => response.json())
+        .then(data => {
+            const scoreList = document.getElementById('score-list'); // Assurez-vous que l'élément 'score-list' existe dans votre HTML
+            data.forEach(score => {
+                const li = document.createElement('li');
+                li.textContent = `${score.playerName}: ${score.score}`;
+                scoreList.appendChild(li);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+        
     function isCurrentRowFilled(currentRow) {
         const currentRowCells = document.querySelectorAll(`.blue-square[data-row="${currentRow}"]`);
         for (let cell of currentRowCells) {
@@ -219,18 +266,16 @@ window.addEventListener("DOMContentLoaded", function () {
                 cell.setAttribute('contenteditable', 'false'); // Rendre non éditable
             });
 
-            // Si toutes les cases de la ligne actuelle sont remplies, déverrouillez toutes les cases de la ligne suivante
-            if (isCurrentRowFilled(currentRow)) {
+            // Déverrouiller la ligne suivante si nécessaire
+            if (isCurrentRowFilled(currentRow) && currentRow < validPhrases.length) {
                 const nextRowCells = document.querySelectorAll(`.blue-square[data-row="${currentRow + 1}"]`);
                 nextRowCells.forEach(cell => {
                     cell.setAttribute('contenteditable', 'true');
                 });
 
-                // Pré-remplir la première case de la ligne suivante avec la première lettre du mot correct
+                // Pré-remplir la première case de la ligne suivante
                 const firstCellOfNextRow = nextRowCells[0];
                 firstCellOfNextRow.innerText = validPhrases[currentRow].charAt(0).toUpperCase();
-
-                // Placer le focus sur la première case de la ligne suivante
                 firstCellOfNextRow.focus();
             }
         } else {
@@ -244,9 +289,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
             if (remainingAttempts <= 0) {
                 alert('Vous avez épuisé tous vos essais!');
-                currentRowCells.forEach(cell => {
-                    cell.setAttribute('contenteditable', 'false');
-                });
+                inputCells.forEach(cell => cell.setAttribute('contenteditable', 'false'));
             } else {
                 alert('Désolé, essayez encore.');
             }
@@ -267,13 +310,8 @@ window.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
-
-
-
-
-
-
 </script>
+
 
 
 
